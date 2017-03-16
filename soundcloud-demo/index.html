@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>Playing a Soundcloud Song from <a href="https://soundcloud.com/kipthesistrack/jazz-guzheng-e-piano">https://soundcloud.com/kipthesistrack/jazz-guzheng-e-piano</a> </h1>
+	</div>
+
+	<script type="text/javascript">
+		/**
+		This code came from this post:
+		http://stackoverflow.com/questions/13455956/setup-web-audio-api-source-node-from-soundcloud
+		**/
+
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+		/* Variables */
+		var context = new AudioContext();
+		var audio = new Audio();
+		var source;
+		/* The streaming url; each Soundcloud track has a unique id, which you can find when you look at the embed code url */
+		var url = 'http://api.soundcloud.com/tracks/8639959/stream' + '?client_id=YOUR_CLIENT_ID';
+
+		/* setting things up */
+		audio.src = url;
+		source = context.createMediaElementSource(audio);
+		source.connect(context.destination);
+
+		/* play */
+		source.mediaElement.play();
+
+	</script>
+</body>
+</html>

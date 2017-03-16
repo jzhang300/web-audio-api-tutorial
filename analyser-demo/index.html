@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>FastFourierTransform Analysation</h1>
+		<canvas id="viz-canvas"></canvas>
+	</div>
+
+	<script type="text/javascript">
+		/* http://www.patrick-wied.at/blog/how-to-create-audio-visualizations-with-javascript-html */
+
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		
+		// variables
+		var context = new AudioContext();
+		var buffer;
+		var source = context.createBufferSource();
+		var localAudioFile = "../sounds/Andy McKee - Rylynn - Acoustic Guitar - www.candyrat.mp3";
+		var analyser = context.createAnalyser();
+		var canvas = document.querySelector('#viz-canvas');
+		var canvasContext;
+
+		// initiate everything
+		window.addEventListener('load', function() {
+			setupCanvas();
+			loadAudio(localAudioFile); 
+		}, false);
+
+		// Load a local audio file using XMLHttpRequest
+		function loadAudio(urlPath) {
+			var request = new XMLHttpRequest();
+			/* API Get request to audio file */
+			request.open("GET", urlPath, true);
+			/* Read as Binary Data */
+			request.responseType = "arraybuffer";
+			request.onload = function() { 
+				/* decode the loaded data and play it */
+				context.decodeAudioData(request.response, function(buf) { 
+					/* set the buffer to the audio data that's requested */
+					buffer = buf;
+					/* hook up buffer to source's buffer */
+					source.buffer = buffer;
+					/* connecting the nodes */
+					source.connect(analyser);
+					analyser.connect(context.destination);
+					/* play sound */
+					source.start(0);
+				});
+			};
+			request.send();
+		}
+
+		// sets up the canvas and starts updating the frames
+		function setupCanvas() { 
+			canvasContext = canvas.getContext('2d');
+			canvas.setAttribute('height', "500");
+			canvas.setAttribute('width', document.querySelector(".container").clientWidth);
+			requestAnimationFrame(update);
+		} 
+
+		// frequencyBinCount tells you how many values you'll receive from the analyser
+		var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+		
+		// getting frequency data in real time
+		function update() {
+			requestAnimationFrame(update);
+			canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+			// frequencyData now has updated array of frequency data
+			analyser.getByteFrequencyData(frequencyData);
+
+			// drawing a circle for each frequency in frequencyData
+			for(var i=0; i<frequencyData.length; i+=1) { 
+				var hue = i * 20 % 360;
+				var xPos = i * 20 + 100;
+				var yPos = canvas.height/2;
+
+				canvasContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+				canvasContext.beginPath();
+				canvasContext.arc(xPos, yPos, frequencyData[i], 0, Math.PI*2, true);
+				canvasContext.fill();
+			}
+		}
+	</script>
+</body>
+</html>

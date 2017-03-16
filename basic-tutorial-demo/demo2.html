@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>This example demonstrates use of multiple AudioNodes.</h1>
+	</div>
+	<script type="text/javascript">
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		
+		/* variables */
+		var context = new AudioContext();
+		var oscillator1 = context.createOscillator();
+		var oscillator2 = context.createOscillator();
+		var gainNode = context.createGain();
+
+		/* setting stuff up */
+		oscillator1.type = "triangle";
+		oscillator2.type = "sine";
+		oscillator2.frequency.value = 500;
+		gainNode.gain.value = 0.5;
+		
+		/* connecting the dots */
+		oscillator1.connect(gainNode);
+		oscillator2.connect(gainNode);
+		gainNode.connect(context.destination);
+
+		/* play */
+		oscillator1.start(0);
+		oscillator2.start(0);
+
+	</script>
+</body>
+</html>

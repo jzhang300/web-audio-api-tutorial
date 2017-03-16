@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+	<style type="text/css">
+		.sliders {
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Filters hooked up to html elements</h1>
+		<h2>Frequency:</h2>
+		<div id="slider" class="sliders"></div>
+		<h2>Gain (Volume):</h2>
+		<div id="gain" class="sliders"></div>
+	</div>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	<script type="text/javascript">
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		
+		/* variables */
+		var context = new AudioContext();
+		var oscillator = context.createOscillator();
+		var gainNode = context.createGain();
+
+		/* setting stuff up */
+		oscillator.type = "sine";
+		oscillator.frequency.value = 100;
+		gainNode.gain.value = 0.5;
+		
+		/* connecting the dots */
+		oscillator.connect(gainNode);
+		gainNode.connect(context.destination);
+
+		/* play */
+		oscillator.start(0);
+
+		$("#slider").slider({
+			range: true,
+			min: 0,
+			max: 1000,
+			values: 100,
+			slide: function(event, ui) {
+				console.log('frequency: ' + ui.value);
+				oscillator.frequency.value = ui.value;
+			}
+		});
+
+		$("#gain").slider({
+			range: true,
+			min: 0,
+			max: 100,
+			values: 50,
+			slide: function(event, ui) {
+				console.log('gain: ' + ui.value);
+				gainNode.gain.value = ui.value/100;
+			}
+		});
+	</script>
+</body>
+</html>

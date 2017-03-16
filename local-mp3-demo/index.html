@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>Playing a local MP3 file</h1>
+	</div>
+
+	<script type="text/javascript">
+		/**
+		This code came from this post:
+		http://stackoverflow.com/questions/13455956/setup-web-audio-api-source-node-from-soundcloud
+		 **/
+
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		
+		/* variables */
+		var context = new AudioContext();
+		var analyser = context.createAnalyser();
+		var buffer;
+		var source = context.createBufferSource();
+
+		/* Load a local audio file using XMLHttpRequest */
+		var request = new XMLHttpRequest();
+		/* API Get request to audio file */
+		request.open("GET", "../sounds/Andy McKee - Rylynn - Acoustic Guitar - www.candyrat.mp3", true);
+		/* Read as Binary Data */
+		request.responseType = "arraybuffer";
+		request.onload = function() { 
+			/* decode the loaded data and play it */
+			context.decodeAudioData(request.response, function(buf) { 
+				/* set the buffer to the audio data that's requested */
+				buffer = buf;
+				/* hook up buffer to source's buffer */
+				source.buffer = buffer;
+				/* connecting the nodes */
+				source.connect(context.destination);
+				/* play sound */
+				source.start(0);
+			}); 
+		};
+		request.send();
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>The most primitive sound in digital audio, a sine wave oscillator.</h1>
+	</div>
+	
+	<script type="text/javascript">
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		
+		/* variables */
+		var context = new AudioContext();
+		var oscillator1 = context.createOscillator();
+		
+		/* connecting the dots */
+		oscillator1.connect(context.destination);
+
+		/* play */
+		oscillator1.start(0);
+
+	</script>
+</body>
+</html>

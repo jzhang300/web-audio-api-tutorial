@@ -1,0 +1,12 @@
+body {
+	font-family: sans-serif;
+}
+
+.container {
+	width: 1000px;
+	margin: 0px auto;
+}
+
+h1 {
+	text-align: center;
+}
