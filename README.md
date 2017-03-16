@@ -1,5 +1,7 @@
+**NOTIFICATION:** This codebase may be outdated
+
 # Web Audio API Demos
----
+
 ### By James Zhang
 
 This is a series of basic demos that uses Web Audio API.
